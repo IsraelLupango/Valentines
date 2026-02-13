@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Be My Valentine 💘</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Comic Sans MS', cursive;
+    overflow: hidden;
+}
+
+.container {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    max-width: 90%;
+    position: relative;
+    z-index: 2;
+}
+
+img {
+    width: 200px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+}
+
+h1 {
+    color: #ff4d6d;
+}
+
+.bubble {
+    position: fixed;
+    background: white;
+    padding: 10px 18px;
+    border-radius: 20px;
+    font-size: 14px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+    animation: fadeBubble 2s ease forwards, shake 0.4s ease;
+    z-index: 9999;
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container" id="box">
+    <img id="gifImage" src="gif1.gif">
+    <h1 id="question">Will you be my Valentine? 💘</h1>
+    <button id="yesBtn">Yes 💖</button>
+    <button id="noBtn">No 😝</button>
+</div>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const question = document.getElementById("question");
+const box = document.getElementById("box");
+const music = document.getElementById("music");
+const gifImage = document.getElementById("gifImage");
+
+let yesCount = 0;
+let noCount = 0;
+
+//////////////////// NO BUTTON ////////////////////
+
+const achievement = document.createElement("div");
+achievement.style.position = "fixed";
+achievement.style.bottom = "15px";
+achievement.style.right = "15px";
+achievement.style.background = "rgba(0,0,0,0.6)";
+achievement.style.color = "white";
+achievement.style.padding = "8px 15px";
+achievement.style.borderRadius = "20px";
+achievement.style.fontSize = "13px";
+achievement.style.zIndex = "9999";
+achievement.innerText = "No taps: 0";
+document.body.appendChild(achievement);
+
+noBtn.addEventListener("click", () => {
+
+    noCount++;
+    achievement.innerText = "No taps: " + noCount;
+
+    gifImage.src = "no.gif";
+
+    setTimeout(() => {
+        moveNoButton();
+    }, 80);
+
+    // 🔥 SECRET ENDING 30 TAPS (Emotional)
+if (noCount === 30) {
+    showEmotionalEnding();
+}
+
+    // 🏆 SECRET ENDING 50 TAPS (Achievement)
+    if (noCount === 50) {
+        showAchievementEnding();
+        return;
+    }
+
+    if (noCount % 5 === 0) {
+        showBubble();
+    }
+});
+
+function moveNoButton() {
+    const safeWidth = window.innerWidth - 120;
+    const safeHeight = window.innerHeight - 120;
+
+    const x = Math.random() * safeWidth;
+    const y = Math.random() * safeHeight;
+
+    noBtn.style.position = "fixed";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+    noBtn.style.transition = "all 0.2s ease";
+}
+
+function showBubble() {
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+
+    const rect = noBtn.getBoundingClientRect();
+
+    let message = "";
+
+    if (noCount >= 20) {
+        message = "You are VERY persistent 😳";
+    } else if (noCount >= 10) {
+        message = "You won’t give up huh 😏";
+    } else {
+        message = "Tap me if you can 😊";
+    }
+
+    bubble.innerText = message;
+
+    bubble.style.left = rect.left + "px";
+    bubble.style.top = (rect.top - 55) + "px";
+
+    document.body.appendChild(bubble);
+
+    setTimeout(() => bubble.remove(), 2000);
+}
+
+//////////////////////////////////////////////////
+// 💖 EMOTIONAL TWIST (30 taps - overlay only)
+//////////////////////////////////////////////////
+
+function showEmotionalEnding() {
+
+    const overlay = document.createElement("div");
+
+    overlay.style.position = "fixed";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.background = "rgba(0,0,0,0.7)";
+    overlay.style.color = "white";
+    overlay.style.display = "flex";
+    overlay.style.flexDirection = "column";
+    overlay.style.justifyContent = "center";
+    overlay.style.alignItems = "center";
+    overlay.style.textAlign = "center";
+    overlay.style.padding = "20px";
+    overlay.style.zIndex = "10000";
+
+    overlay.innerHTML = `
+        <h1>Wait… 😭</h1>
+        <p>
+        Even if you press No 30 times…<br><br>
+        I would still choose you.<br>
+        Over and over again 💖<br><br>
+        Loving you isn’t a button…
+        it’s a decision I make every day.
+        </p>
+        <button id="continueBtn" style="
+            margin-top:20px;
+            padding:10px 20px;
+            border:none;
+            border-radius:20px;
+            background:#ff4d6d;
+            color:white;
+            font-size:16px;
+        ">Continue 😳</button>
+    `;
+
+    document.body.appendChild(overlay);
+
+    document.getElementById("continueBtn").onclick = function() {
+        overlay.remove();
+    };
+}
+//////////////////////////////////////////////////
+// 🏆 ACHIEVEMENT ENDING (50 taps)
+//////////////////////////////////////////////////
+
+function showAchievementEnding() {
+
+    box.innerHTML = `
+        <h1>🏆 ACHIEVEMENT UNLOCKED 🏆</h1>
+        <p>
+        Most Stubborn Girlfriend Award 😂💖<br><br>
+        50 No taps?? That’s dedication.
+        </p>
+        <button onclick="location.reload()">Play Again 😈</button>
+    `;
+
+    noBtn.style.display = "none";
+    yesBtn.style.display = "none";
+
+    startMiniFireworks();
+}
+
+//////////////////////////////////////////////////
+// MINI FIREWORKS FOR ACHIEVEMENT
+//////////////////////////////////////////////////
+
+function startMiniFireworks() {
+
+    const canvas = document.createElement("canvas");
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+
+    function explode(x, y) {
+        for (let i = 0; i < 40; i++) {
+            particles.push({
+                x: x,
+                y: y,
+                speedX: (Math.random() - 0.5) * 6,
+                speedY: (Math.random() - 0.5) * 6,
+                life: 80
+            });
+        }
+    }
+
+    function animate() {
+        ctx.fillStyle = "rgba(0,0,0,0.1)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach((p, index) => {
+            p.x += p.speedX;
+            p.y += p.speedY;
+            p.life--;
+
+            ctx.fillStyle = "gold";
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (p.life <= 0) {
+                particles.splice(index, 1);
+            }
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    setInterval(() => {
+        explode(
+            Math.random() * canvas.width,
+            Math.random() * canvas.height / 2
+        );
+    }, 800);
+
+    animate();
+}
+//////////////////// YES BUTTON ////////////////////
+
+yesBtn.addEventListener("click", () => {
+    yesCount++;
+
+    if (yesCount === 1) {
+        question.innerHTML = "Are you sure? 😳";
+        gifImage.src = "gif2.gif";
+    } 
+    else if (yesCount === 2) {
+        question.innerHTML = "Really really sure? 🥺💗";
+        gifImage.src = "gif3.gif";
+    } 
+    else if (yesCount === 3) {
+        question.innerHTML = "Like 100% sure?? 😭💞";
+        gifImage.src = "gif4.gif";
+    }
+    else if (yesCount === 4) {
+        question.innerHTML = "No take backs after this 👀💘";
+        gifImage.src = "gif5.gif";
+    }
+    else {
+        music.volume = 0;
+        music.play();
+        fadeInMusic();
+
+        box.innerHTML = `
+            <h1>YOU SAID YES 💖😭</h1>
+            <p>
+            You just made me the happiest person alive.<br><br>
+            I promise to love you,
+            choose you,
+            and annoy you forever 💘✨
+            </p>
+        `;
+
+        startHeartFireworks();
+    }
+});
+
+//////////////////// FADE IN MUSIC ////////////////////
+
+function fadeInMusic() {
+    let volume = 0;
+    const interval = setInterval(() => {
+        if (volume < 1) {
+            volume += 0.05;
+            music.volume = volume;
+        } else {
+            clearInterval(interval);
+        }
+    }, 150);
+}
+
+//////////////////// HEART FIREWORKS ////////////////////
+
+function startHeartFireworks() {
+
+    const canvas = document.createElement("canvas");
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+
+    function createHeart(x, y) {
+        for (let t = 0; t < Math.PI * 2; t += 0.1) {
+            const heartX = 16 * Math.pow(Math.sin(t), 3);
+            const heartY =
+                13 * Math.cos(t) -
+                5 * Math.cos(2 * t) -
+                2 * Math.cos(3 * t) -
+                Math.cos(4 * t);
+
+            particles.push({
+                x: x,
+                y: y,
+                speedX: heartX * 0.3,
+                speedY: -heartY * 0.3,
+                life: 100
+            });
+        }
+    }
+
+    function animate() {
+        ctx.fillStyle = "rgba(0,0,0,0.15)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach((p, index) => {
+            p.x += p.speedX;
+            p.y += p.speedY;
+            p.life--;
+
+            ctx.fillStyle = "hotpink";
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (p.life <= 0) {
+                particles.splice(index, 1);
+            }
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    setInterval(() => {
+        createHeart(
+            Math.random() * canvas.width,
+            Math.random() * canvas.height / 2
+        );
+    }, 1200);
+
+    animate();
+}
+</script>
+
+</body>
+</html>
